@@ -14,8 +14,8 @@ def form_input_post():
     text = request.form['text']
     response = ""
     if text != "":
-        response = model.predict_text(text)
-        print(response)
+        response = model.predict_text_3g(text)
+        #print(response)
     return render_template("textbox_input.html", data={"text": response})
 
 

@@ -31,7 +31,6 @@ num_tokens = len(all_characters)  # Number of tokens
 # LOAD MODEL
 model = keras.models.load_model(model_path)
 
-
 def predict_text(text):
     # PREPARE DATA
     test_texts = [text]
@@ -76,3 +75,74 @@ def predict_text(text):
         decoded_sentence = "".join(decoded)
 
     return decoded_sentence
+
+import nltk
+from nltk import ngrams
+letters = [' ','-','a','b','c','d','e','f','g','h','i','j','k','l',
+'m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+
+of_interest = ['a', 'i', 's', 't']
+
+def split_sentence_to_trigrams(sentence):
+    trigrams = ngrams(sentence.split(), 3)
+    sentences = []
+    try:
+      for ngram in trigrams:
+          sentence_trigram = ' '.join(ngram)
+          sentences.append(sentence_trigram)
+    except Exception as e:
+      return sentences
+    return sentences
+
+def rebuild_from_trigrams(trigrams):
+    rebuilt_sentence = ""
+    if len(trigrams) == 1:
+        return trigrams[0]
+    for i in range(len(trigrams)):
+        splat_trigram = trigrams[i].split(' ')
+        if i == 0:
+            rebuilt_sentence += splat_trigram[0] + ' '
+        rebuilt_sentence += splat_trigram[1] + ' '
+        if i == len(trigrams) - 1:
+            rebuilt_sentence += splat_trigram[-1]
+    rebuilt_sentence = rebuilt_sentence.strip()
+    return rebuilt_sentence
+
+def rebuild_sentence(sentence_in, sentence_out):
+    index_out = 0
+    sentence_rebuilt = ""
+    len_out = len(sentence_out)
+    for i in range(len(sentence_in)):
+        char_crt = sentence_in[i]
+        if char_crt.lower() in letters:
+            if len_out > index_out:
+                if char_crt in of_interest:
+                    if char_crt.isupper():
+                        sentence_rebuilt += sentence_out[index_out].upper()
+                    else:
+                        sentence_rebuilt += sentence_out[index_out]
+                else:
+                    sentence_rebuilt += char_crt
+                index_out += 1
+            else:
+                sentence_rebuilt += char_crt
+        else:
+            sentence_rebuilt += char_crt
+    return sentence_rebuilt
+
+def preprocess(text):
+    processed_text = ""
+    for char_ in text:
+        if char_.lower() in letters:
+            processed_text += char_.lower()
+    return processed_text
+
+def predict_text_3g(text):
+    preprocessed_text = preprocess(text)
+    trigrams = split_sentence_to_trigrams(text)
+    diac_trigrams = []
+    for trigram in trigrams:
+        diac_trigrams.append(predict_text(trigram))
+    sentence_out = rebuild_from_trigrams(diac_trigrams)
+    return sentence_out
+
