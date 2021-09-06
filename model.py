@@ -139,7 +139,7 @@ def preprocess(text):
 
 def predict_text_3g(text):
     preprocessed_text = preprocess(text)
-    trigrams = split_sentence_to_trigrams(text)
+    trigrams = split_sentence_to_trigrams(preprocessed_text)
     diac_trigrams = []
     for trigram in trigrams:
         diac_trigrams.append(predict_text(trigram))
