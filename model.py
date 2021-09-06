@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-tf.config.experimental.set_visible_devices([], 'GPU')
+#tf.config.experimental.set_visible_devices([], 'GPU')
 
 model_path = "models/cnn_fix1"
 #model_path = "models/diz_cnn_emb_3g_1"
