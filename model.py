@@ -144,5 +144,6 @@ def predict_text_3g(text):
     for trigram in trigrams:
         diac_trigrams.append(predict_text(trigram))
     sentence_out = rebuild_from_trigrams(diac_trigrams)
+    sentence_out = rebuild_sentence(text, sentence_out)
     return sentence_out
 
